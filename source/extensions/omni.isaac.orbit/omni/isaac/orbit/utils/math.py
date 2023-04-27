@@ -445,7 +445,7 @@ def compute_pose_error(t01: torch.Tensor, q01: torch.Tensor, t02: torch.Tensor, 
 
 @torch.jit.script
 def apply_delta_pose(
-    source_pos: torch.Tensor, source_rot, delta_pose: torch.Tensor, eps: float = 1.0e-6
+    source_pos: torch.Tensor, source_rot: torch.Tensor, delta_pose: torch.Tensor, eps: float = 1.0e-6
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Applies delta pose transformation on source pose.
 
@@ -481,6 +481,31 @@ def apply_delta_pose(
     target_rot = quat_mul(rot_delta_quat, source_rot)
 
     return target_pos, target_rot
+
+
+@torch.jit.script
+def apply_delta_pose_inverse(
+    source_pos: torch.Tensor, source_rot: torch.Tensor, target_pos: torch.Tensor, target_rot: torch.Tensor, eps: float = 1.0e-6
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Inverse of @apply_delta_pose.
+
+    Goes from target pos and target_rot to delta pose.
+    """
+    # number of poses given
+    num_poses = source_pos.shape[0]
+    device = source_pos.device
+
+    # delta quaternion
+    source_rot_inv = quat_inv(source_rot)
+    rot_delta_quat = quat_mul(target_rot, source_rot_inv)
+
+    # convert to delta axis-angle
+    rot_actions = axis_angle_from_quat(rot_delta_quat)
+
+    pos_actions = target_pos - source_pos
+    delta_pose_actions = torch.cat((pos_actions, rot_actions), dim=-1)
+
+    return delta_pose_actions
 
 
 """
