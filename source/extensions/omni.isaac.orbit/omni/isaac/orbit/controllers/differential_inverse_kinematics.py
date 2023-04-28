@@ -193,6 +193,8 @@ class DifferentialInverseKinematics:
             self._command[:, 3:6] @= self._rotation_command_scale
             # compute targets
             self.desired_ee_pos, self.desired_ee_rot = apply_delta_pose(current_ee_pos, current_ee_rot, self._command)
+            # print("gt ee pos target: {}".format(self.desired_ee_pos))
+            # print("gt ee rot target: {}".format(self.desired_ee_rot))
         elif "pose_abs" in self.cfg.command_type:
             # compute targets
             self.desired_ee_pos = self._command[:, 0:3]

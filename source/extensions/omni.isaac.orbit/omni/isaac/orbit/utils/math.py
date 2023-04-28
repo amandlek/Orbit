@@ -486,7 +486,7 @@ def apply_delta_pose(
 @torch.jit.script
 def apply_delta_pose_inverse(
     source_pos: torch.Tensor, source_rot: torch.Tensor, target_pos: torch.Tensor, target_rot: torch.Tensor, eps: float = 1.0e-6
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> torch.Tensor:
     """Inverse of @apply_delta_pose.
 
     Goes from target pos and target_rot to delta pose.
