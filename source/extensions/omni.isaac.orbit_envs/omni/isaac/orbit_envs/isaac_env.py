@@ -258,10 +258,11 @@ class IsaacEnv(gym.Env):
                 carb.log_warn("Simulation is stopped. Please exit the simulator...")
         # if playing, we set the actions into the simulator and step
         else:
-            # reset environments that terminated
-            reset_env_ids = self.reset_buf.nonzero(as_tuple=False).squeeze(-1)
-            if len(reset_env_ids) > 0:
-                self._reset_idx(reset_env_ids)
+            # NOTE: commented this out to disable auto-reset for now...
+            # # reset environments that terminated
+            # reset_env_ids = self.reset_buf.nonzero(as_tuple=False).squeeze(-1)
+            # if len(reset_env_ids) > 0:
+            #     self._reset_idx(reset_env_ids)
             # increment the number of steps
             self.episode_length_buf += 1
             # perform the stepping of simulation

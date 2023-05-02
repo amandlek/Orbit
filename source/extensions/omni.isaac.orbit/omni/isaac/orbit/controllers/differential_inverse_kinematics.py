@@ -194,7 +194,8 @@ class DifferentialInverseKinematics:
             # compute targets
             self.desired_ee_pos, self.desired_ee_rot = apply_delta_pose(current_ee_pos, current_ee_rot, self._command)
             # print("gt ee pos target: {}".format(self.desired_ee_pos))
-            # print("gt ee rot target: {}".format(self.desired_ee_rot))
+            # import robosuite.utils.transform_utils as T
+            # print("gt ee rot target: {}".format(T.quat2mat(T.convert_quat(self.desired_ee_rot.cpu().numpy()[0], to="xyzw"))))
         elif "pose_abs" in self.cfg.command_type:
             # compute targets
             self.desired_ee_pos = self._command[:, 0:3]
